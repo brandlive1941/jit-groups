@@ -1,4 +1,4 @@
-name: Dashboard API - Build and Deploy to Cloud Run
+name: Just-In-Time Access - Build and Deploy to Cloud Run
 
 on:
   workflow_dispatch:
@@ -17,7 +17,7 @@ jobs:
   build:
     name: Build Image
     runs-on: ubuntu-latest
-    environment: dev
+    environment: ${{ github.event.inputs.environment }}
     permissions:
       contents: read
       id-token: write
