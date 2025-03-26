@@ -37,10 +37,16 @@ jobs:
         workload_identity_provider: ${{ vars.WIF_PROVIDER }}
         service_account: ${{ vars.WIF_SERVICE_ACCOUNT }}
 
+    - name: Set short git commit SHA
+      id: vars
+      run: |
+        calculatedSha=$(git rev-parse --short ${{ github.sha }})
+        echo "COMMIT_SHORT_SHA=$calculatedSha" >> $GITHUB_ENV
+
     - name: Trigger GCP Cloud Build
       id: trigger-build
       run: |
-        gcloud builds submit --config cloudbuild.yaml --substitutions _DOCKER_REPO=${{ env.DOCKER_REPO }},_IMAGE_NAME=${{ env.NAME }},_DOCKERFILE_PATH=${{ env.DOCKERFILE_PATH }}
+        gcloud builds submit --config cloudbuild.yaml --substitutions _DOCKER_REPO=${{ env.DOCKER_REPO }},_DOCKERFILE_PATH=${{ env.DOCKERFILE_PATH }},_IMAGE_NAME=${{ env.NAME }},_IMAGE_TAG=${{ env.COMMIT_SHORT_SHA }}
 
   # deploy:
   #   name: Deploy to Cloud Run
