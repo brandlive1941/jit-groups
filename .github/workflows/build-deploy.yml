@@ -13,6 +13,7 @@ env:
   REGISTRY: 'gcr.io'
   REPO: 'jit-access'
   NAME: 'jit-access'
+  DOCKREFILE_PATH: 'sources/Dockerfile'
 jobs: 
   build:
     name: Build Image
@@ -39,7 +40,7 @@ jobs:
     - name: Trigger GCP Cloud Build
       id: trigger-build
       run: |
-        gcloud builds submit --config cloudbuild.yaml --substitutions _REPO_NAME=${{ env.REPO }},_IMAGE_NAME=${{ env.NAME }},_IMAGE_TAG=${{ github.sha }}
+        gcloud builds submit --config cloudbuild.yaml --substitutions _REPO_NAME=${{ env.REPO }},_IMAGE_NAME=${{ env.NAME }},_IMAGE_TAG=${{ github.sha }},_DOCKERFILE_PATH=${{ env.DOCKERFILE_PATH }}
 
   # deploy:
   #   name: Deploy to Cloud Run
