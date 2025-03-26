@@ -1,9 +1,6 @@
 steps:
   # Build the Docker image
   - name: 'gcr.io/cloud-builders/docker'
-    args: [ 'build', '-t', 'us-docker.pkg.dev/${PROJECT_ID}/${_REPO_NAME}/${_IMAGE_NAME}:${COMMIT_SHA}', '-f', '${_DOCKERFILE_PATH}', '.' ]
-
-  - name: 'gcr.io/cloud-builders/docker'
     entrypoint: bash
     args:
       - -c
