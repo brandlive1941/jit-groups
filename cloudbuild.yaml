@@ -16,4 +16,4 @@ steps:
 
   # Push the Docker image to Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
-    args: [ 'push', 'us-docker.pkg.dev/${PROJECT_ID}/${_REPO_NAME}/${_IMAGE_NAME}:${COMMIT_SHA}' ]
+    args: [ 'push', 'us-docker.pkg.dev/${PROJECT_ID}/${_DOCKER_REPO}/${_IMAGE_NAME}:${COMMIT_SHA}' ]
