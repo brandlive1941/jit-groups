@@ -40,7 +40,7 @@ jobs:
     - name: Trigger GCP Cloud Build
       id: trigger-build
       run: |
-        gcloud builds submit --config cloudbuild.yaml --substitutions _REPO_NAME=${{ env.REPO }},_IMAGE_NAME=${{ env.NAME }},_DOCKERFILE_PATH=${{ env.DOCKERFILE_PATH }}
+        gcloud builds submit --config cloudbuild.yaml --substitutions _DOCKER_REPO=${{ env.DOCKER_REPO }},_IMAGE_NAME=${{ env.NAME }},_DOCKERFILE_PATH=${{ env.DOCKERFILE_PATH }}
 
   # deploy:
   #   name: Deploy to Cloud Run
