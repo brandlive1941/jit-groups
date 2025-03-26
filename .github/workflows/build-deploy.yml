@@ -39,7 +39,7 @@ jobs:
     - name: Trigger GCP Cloud Build
       id: trigger-build
       run: |
-        gcloud builds submit --config cloudbuild.yaml --substitutions _PROJECT_ID=${{ vars.PROJECT }},_REPO_NAME=${{ env.REPO }},_IMAGE_NAME=${{ env.NAME }},_IMAGE_TAG=${{ github.sha }}
+        gcloud builds submit --config cloudbuild.yaml --substitutions _REPO_NAME=${{ env.REPO }},_IMAGE_NAME=${{ env.NAME }},_IMAGE_TAG=${{ github.sha }}
 
   # deploy:
   #   name: Deploy to Cloud Run

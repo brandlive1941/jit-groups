@@ -1,8 +1,8 @@
 steps:
   # Build the Docker image
   - name: 'gcr.io/cloud-builders/docker'
-    args: [ 'build', '-t', 'us-west1-docker.pkg.dev/${_PROJECT_ID}/${_REPO_NAME}/jitaccess:latest', '.' ]
+    args: [ 'build', '-t', 'us-west1-docker.pkg.dev/${PROJECT_ID}/${_REPO_NAME}/${_IMAGE_NAME}:${_IMAGE_TAG}', '.' ]
 
   # Push the Docker image to Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
-    args: [ 'push', 'us-west1-docker.pkg.dev/${_PROJECT_ID}/${_REPO_NAME}/jitaccess:latest' ]
+    args: [ 'push', 'us-west1-docker.pkg.dev/${PROJECT_ID}/${_REPO_NAME}/${_IMAGE_NAME}:${_IMAGE_TAG}' ]
