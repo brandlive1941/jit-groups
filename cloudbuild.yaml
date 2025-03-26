@@ -1,8 +1,19 @@
 steps:
   # Build the Docker image
   - name: 'gcr.io/cloud-builders/docker'
-    args: [ 'build', '-t', 'us-docker.pkg.dev/${PROJECT_ID}/${_REPO_NAME}/${_IMAGE_NAME}:${_IMAGE_TAG}', '-f', '${_DOCKERFILE_PATH}', '.' ]
+    args: [ 'build', '-t', 'us-docker.pkg.dev/${PROJECT_ID}/${_REPO_NAME}/${_IMAGE_NAME}:${COMMIT_SHA}', '-f', '${_DOCKERFILE_PATH}', '.' ]
+
+  - name: 'gcr.io/cloud-builders/docker'
+    entrypoint: bash
+    args:
+      - -c
+      - |
+        cd ${_DOCKERFILE_PATH} &&
+        echo "//registry.npmjs.org/:_authToken=$$NPM_TOKEN" > .npmrc &&
+        docker build \
+          -t us-docker.pkg.dev/${PROJECT_ID}/${_DOCKER_REPO}/${_IMAGE_NAME}:${COMMIT_SHA}' \
+          -f ${_DOCKERFILE_PATH}/Dockerfile .
 
   # Push the Docker image to Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
-    args: [ 'push', 'us-docker.pkg.dev/${PROJECT_ID}/${_REPO_NAME}/${_IMAGE_NAME}:${_IMAGE_TAG}' ]
+    args: [ 'push', 'us-docker.pkg.dev/${PROJECT_ID}/${_REPO_NAME}/${_IMAGE_NAME}:${COMMIT_SHA}' ]
