@@ -1,0 +1,81 @@
+name: Dashboard API - Build and Deploy to Cloud Run
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        type: environment
+        required: true
+        default: 'brandlive-admin'
+        
+env:
+  REGISTRY: 'gcr.io'
+  REPO: 'jit-access'
+  NAME: 'jit-access'
+jobs: 
+  build:
+    name: Build Image
+    runs-on: ubuntu-latest
+    environment: dev
+    permissions:
+      contents: read
+      id-token: write
+      pull-requests: write
+
+    steps:
+    - name: Check out code
+      id: checkout
+      uses: actions/checkout@v4
+
+    - name: Authenticate to GCP
+      id: auth
+      uses: google-github-actions/auth@v2
+      with:
+        token_format: access_token
+        workload_identity_provider: ${{ vars.WIF_PROVIDER }}
+        service_account: ${{ vars.WIF_SERVICE_ACCOUNT }}
+
+    - name: Trigger GCP Cloud Build
+      id: trigger-build
+      run: |
+        gcloud builds submit --config cloudbuild.yaml --substitutions _PROJECT_ID=${{ vars.PROJECT }},_REPO_NAME=${{ env.REPO }},_IMAGE_NAME=${{ env.NAME }},_IMAGE_TAG=${{ github.sha }}
+
+  # deploy:
+  #   name: Deploy to Cloud Run
+  #   runs-on: ubuntu-latest
+  #   environment: ${{ github.event.inputs.environment }}
+  #   needs: build
+  #   permissions:
+  #     contents: read
+  #     id-token: write
+  #     pull-requests: write
+
+  #   steps:
+  #   - name: Check out code
+  #     id: checkout
+  #     uses: actions/checkout@v4
+
+  #   - name: Authenticate to GCP
+  #     id: auth
+  #     uses: google-github-actions/auth@v2
+  #     with:
+  #       token_format: access_token
+  #       workload_identity_provider: ${{ vars.WIF_PROVIDER }}
+  #       service_account: ${{ vars.WIF_SERVICE_ACCOUNT }}
+
+  #   - name: Deploy to Cloud Run
+  #     id: deploy-cloudrun
+  #     uses: brandlive1941/action-google-cloud-deploy@v1.0.8
+  #     with: 
+  #       deploy_type: cloudrun
+  #       project_id: ${{ vars.PROJECT }}
+  #       environment: ${{ github.event.inputs.environment }}
+  #       region: ${{ vars.REGION }}
+  #       directory: "service"
+  #       service_definition: "container.yaml"
+  #       service_name: "${{ github.event.inputs.environment }}-${{ env.NAME }}-${{ vars.REGION }}-cr"
+  #       image: ${{ env.REGISTRY }}/${{ env.REPO }}/${{ env.NAME }}:${{ github.sha }}
+  #       cloud_run_sa: ${{ vars.CLOUD_RUN_SA }}
+  #       vpc_access_connector: ${{ vars.VPC_ACCESS_CONNECTOR }}
+
