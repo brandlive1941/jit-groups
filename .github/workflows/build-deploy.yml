@@ -57,6 +57,7 @@ jobs:
         project_id: ${{ vars.PROJECT }}
         environment: ${{ github.event.inputs.environment }}
         region: ${{ vars.REGION }}
+        directory: "./"
         service_definition: "service.yaml"
         service_name: "${{ env.NAME }}-${{ vars.REGION }}-cr"
         image: "us-docker.pkg.dev/${{ env.ARTIFACT_REPO }}/${{ env.NAME }}:${{ env.COMMIT_SHORT_SHA }}"
