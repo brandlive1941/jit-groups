@@ -1,4 +1,4 @@
-name: Just-In-Time Access - Build and Deploy to Cloud Run
+name: Build and Deploy to Cloud Run
 
 on:
   workflow_dispatch:
