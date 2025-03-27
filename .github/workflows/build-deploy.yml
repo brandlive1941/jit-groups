@@ -49,13 +49,6 @@ jobs:
       run: |
         gcloud builds submit --config cloudbuild.yaml --substitutions _ARTIFACT_REPO=${{ env.ARTIFACT_REPO }},_DOCKERFILE_PATH=${{ env.DOCKERFILE_PATH }},_IMAGE_NAME=${{ env.NAME }},_IMAGE_TAG=${{ env.COMMIT_SHORT_SHA }}
 
-    - id: 'deploy'
-      uses: 'google-github-actions/deploy-cloudrun@v2'
-      with:
-        service: 'jit-service'
-        image: 'us-docker.pkg.dev/${{ vars.PROJECT }}/${{ env.ARTIFACT_REPO }}/${{ env.NAME }}:${{ env.COMMIT_SHORT_SHA }}'
-        metadata: service.yaml
-
     - name: Deploy to Cloud Run
       id: deploy-cloudrun
       uses: brandlive1941/action-google-cloud-deploy@v1.0.8
