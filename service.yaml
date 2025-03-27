@@ -31,7 +31,7 @@ spec:
           valueFrom:
             secretKeyRef:
               key: latest
-              name: JIT_RESOURCE_SCOPE
+              name: jit_resource_scope
         - name: ELEVATION_DURATION
           value: "120"
         - name: JUSTIFICATION_HINT
@@ -42,7 +42,7 @@ spec:
           valueFrom:
             secretKeyRef:
               key: latest
-              name: JIT_IAP_BACKEND_SERVICE_ID
+              name: jit_iap_backend_service_id
         resources:
           limits:
             cpu: 1000m
