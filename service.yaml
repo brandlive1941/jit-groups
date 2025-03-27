@@ -1,0 +1,55 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: ${SERVICE_NAME}
+  annotations:
+    run.googleapis.com/ingress: internal-and-cloud-load-balancing
+    run.googleapis.com/ingress-status: internal-and-cloud-load-balancing
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/minScale: '1'
+        autoscaling.knative.dev/maxScale: '100'
+        run.googleapis.com/cpu-throttling: 'true'
+        run.googleapis.com/vpc-access-egress: all-traffic
+        run.googleapis.com/vpc-access-connector: ${VPC_ACCESS_CONNECTOR}
+        run.googleapis.com/execution-environment: gen2
+    spec:
+      containerConcurrency: 80
+      timeoutSeconds: 300
+      serviceAccountName: ${CLOUD_RUN_SA}
+      containers:
+      - image: ${IMAGE}
+        ports:
+        - name: http1
+          containerPort: 8080
+        env:
+        - name: SYNC_AUTH
+
+        - name: RESOURCE_SCOPE
+          valueFrom:
+            secretKeyRef:
+              key: latest
+              name: JIT_RESOURCE_SCOPE
+        - name: ELEVATION_DURATION
+          value: "120"
+        - name: JUSTIFICATION_HINT
+          value: "Ticket or Incident number"
+        - name: JUSTIFICATION_PATTERN
+          value: ".*"
+        - name: IAP_BACKEND_SERVICE_ID
+          valueFrom:
+            secretKeyRef:
+              key: latest
+              name: JIT_IAP_BACKEND_SERVICE_ID
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 512Mi
+        startupProbe:
+          timeoutSeconds: 240
+          periodSeconds: 240
+          failureThreshold: 1
+          tcpSocket:
+            port: 8084
