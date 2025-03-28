@@ -53,6 +53,11 @@ spec:
             secretKeyRef:
               key: latest
               name: jit_primary_domain
+        - name: ORGANIZATION_ID
+          valueFrom:
+            secretKeyRef:
+              key: latest
+              name: jit_organization_id
         resources:
           limits:
             cpu: 1000m
