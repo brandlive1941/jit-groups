@@ -57,4 +57,4 @@ spec:
           periodSeconds: 240
           failureThreshold: 1
           tcpSocket:
-            port: 8084
+            port: 8080
